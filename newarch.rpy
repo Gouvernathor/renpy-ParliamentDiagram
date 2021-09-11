@@ -1,29 +1,30 @@
 init python:
     import math
 
-    class Totals:
-        def __getitem__(self, key):
-            if isinstance(key, int) and (key >= 0):
-                rows = key + 1
-                tot = 0
-                rad = 1/float(4*rows-2)
-                for r in range(1, rows+1):
-                    R = .5 + 2*(r-1)*rad
-                    tot += int(math.pi*R/(2*rad))
-                return tot
-            return NotImplemented
-        # totals[i] : nombre max de sièges quand on a i+1 rangs
-
     class Newarch(renpy.Displayable):
         '''
         Custom Displayable
         Zoom .5 to have the real size
         Not to use directly, use the newarch function as a handler proxy
         '''
+
+        class Totals:
+            def __getitem__(self, key):
+                if isinstance(key, int) and (key >= 0):
+                    rows = key + 1
+                    tot = 0
+                    # maximum seat radius, relative to the height of the diagram
+                    rad = 1/float(4*rows-2)
+                    for r in range(1, rows+1):
+                        R = .5 + 2*(r-1)*rad
+                        tot += int(math.pi*R/(2*rad))
+                    return tot
+                return NotImplemented
+            # totals[i] : nombre max de sièges quand on a i+1 rangs
         totals = Totals()
         aafactor = 2
 
-        def __init__(self, the_list, bg=False, **kwargs):
+        def __init__(self, the_list, bg=None, **kwargs):
             '''
             `the_list`
                 list of, for each party having seats in the house,
